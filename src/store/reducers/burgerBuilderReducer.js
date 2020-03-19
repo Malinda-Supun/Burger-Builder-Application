@@ -14,57 +14,59 @@ const INGREDIENT_PRICE = {
     bacon: 0.7
 }
 
+const addIngredient = (state, action) => {
+    const updatedIngredient = { [action.ingredientName]: state.ingredients[action.ingredientName] + 1}
+    const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
+    const updatedState = {
+        ingredients: updatedIngredients,
+        totalPrice: state.totalPrice + INGREDIENT_PRICE[action.ingredientName]
+    }
+    return updateObject(state, updatedState);
+}
+
+const removeIngredient = (state, action) => {
+    const updatedIngredient = { [action.ingredientName]: state.ingredients[action.ingredientName] - 1}
+    const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
+    const updatedState = {
+        ingredients: updatedIngredients,
+        totalPrice: state.totalPrice - INGREDIENT_PRICE[action.ingredientName]
+    }
+    return updateObject(state, updatedState);
+}
+
+const setIngredients = (state, action) => {
+    return updateObject(state, {
+        ingredients: {
+            salad: action.ingredients.salad,
+            bacon: action.ingredients.bacon,
+            cheese: action.ingredients.cheese,
+            meat: action.ingredients.meat
+        },
+        totalPrice: 4,
+        error: false
+    });
+}
+
+const fetchIngredients = (state, action) => {
+    updateObject(state, {error: true})
+}
+
 const burgerBuilderReducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.ADD_INGREDIENT:
-         /*   const updatedIngredient = { [action.ingredientName]: state.ingredients[action.ingredientName] + 1}
-            const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
-            const updatedState = {
-                ingredients: updatedIngredients,
-                totalPrice: state.totalPrice + INGREDIENT_PRICE[action.ingredientName]
-            }
-            return updateObject(state, updatedState);*/
+            return addIngredient(state, action);
 
-            return {
-                ...state,
-                ingredients: {
-                    ...state.ingredients,
-                    [action.ingredientName]: state.ingredients[action.ingredientName] + 1
-                },
-                totalPrice: state.totalPrice + INGREDIENT_PRICE[action.ingredientName]
-            }
         case actionTypes.REMOVE_INGREDIENT:
-            return {
-                ...state,
-                ingredients: {
-                    ...state.ingredients,
-                    [action.ingredientName]: state.ingredients[action.ingredientName] -1
-                },
-                totalPrice: state.totalPrice - INGREDIENT_PRICE[action.ingredientName]
-            }
-        case actionTypes.SET_INGREDIENTS: {
-            return {
-                ...state,
-                ingredients: {
-                    salad: action.ingredients.salad,
-                    bacon: action.ingredients.bacon,
-                    cheese: action.ingredients.cheese,
-                    meat: action.ingredients.meat
-                },
-                totalPrice: 4,
-                error: false
-            }
-        }
-        case actionTypes.FETCH_INGREDIENT_FAILED: {
-            // return updateObject(state, {error: true})
-            return {
-                ...state,
-                error: true
-            }
-        }
-    }
+            return removeIngredient(state,action);
 
-    return state;
+        case actionTypes.SET_INGREDIENTS:
+            return setIngredients(state, action);
+
+        case actionTypes.FETCH_INGREDIENT_FAILED:
+            return fetchIngredients(state, action)
+
+        default: return state
+    }
 }
 
 export default burgerBuilderReducer;

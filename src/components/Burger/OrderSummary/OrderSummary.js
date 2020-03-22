@@ -4,11 +4,6 @@ import Button from '../../UI/Button/Button';
 
 class OrderSummary extends Component {
 
-    // This could be a functional component doesnt have to be a class
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log('[Order Summery]');
-    }
-
 
     render() {
         const ingredientSummary = Object.keys(this.props.ingredients)
@@ -16,8 +11,8 @@ class OrderSummary extends Component {
                             <span style={{textTransform: 'capitalize'}}>
                                 {igKey}
                             </span>
-                            : {this.props.ingredients[igKey]}
-                          </li>
+                    : {this.props.ingredients[igKey]}
+                </li>
             );
 
         return (
